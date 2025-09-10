@@ -17,21 +17,21 @@ def get_exercises(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Récupérer les exercices disponibles"""
+    """Retrieve available exercises"""
 
     query = db.query(Exercise).filter(Exercise.is_active == True)
 
-    # Filtrer par difficulté si spécifiée
+    # Filter by difficulty if specified
     if difficulty:
         query = query.filter(Exercise.difficulty == difficulty)
 
-    # Filtrer par sujet si spécifié
+    # Filter by topic if specified
     if topic:
         query = query.filter(Exercise.topic == topic)
 
     exercises = query.all()
 
-    # Convertir en dictionnaire pour la réponse
+    # Convert to dictionary for the response
     return [
         {
             "id": ex.id,
@@ -51,7 +51,7 @@ def get_exercise_details(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Récupérer les détails d'un exercice"""
+    """Retrieve the details of an exercise"""
 
     exercise = db.query(Exercise).filter(
         Exercise.id == exercise_id,
@@ -80,145 +80,145 @@ def seed_exercises(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Créer quelques exercices d'exemple (pour le développement)"""
+    """Create some sample exercises (for development)"""
 
-    # Vérifier s'il y a déjà des exercices
+    # Check if exercises already exist
     existing = db.query(Exercise).first()
     if existing:
         return {"message": "Exercises already exist"}
 
     exercises_data = [
         {
-            "title": "Variables de base",
-            "description": "Déclarez des variables de différents types et affichez-les",
+            "title": "Basic Variables",
+            "description": "Declare variables of different types and print them",
             "difficulty": "beginner",
             "topic": "variables",
             "starter_code": """public class Variables {
     public static void main(String[] args) {
-        // Déclarez une variable int nommée 'age' avec la valeur 25
+        // Declare an int variable named 'age' with value 25
 
-        // Déclarez une variable String nommée 'nom' avec votre nom
+        // Declare a String variable named 'name' with your name
 
-        // Affichez ces variables avec System.out.println()
+        // Print these variables with System.out.println()
 
     }
 }""",
             "solution": """public class Variables {
     public static void main(String[] args) {
         int age = 25;
-        String nom = "Alice";
+        String name = "Alice";
 
-        System.out.println("Nom: " + nom);
+        System.out.println("Name: " + name);
         System.out.println("Age: " + age);
     }
 }""",
             "test_cases": [
-                {"input": "", "expected_output": "Nom: Alice\\nAge: 25"}
+                {"input": "", "expected_output": "Name: Alice\\nAge: 25"}
             ]
         },
         {
-            "title": "Boucle for simple",
-            "description": "Utilisez une boucle for pour afficher les nombres de 1 à 5",
+            "title": "Simple for loop",
+            "description": "Use a for loop to print numbers from 1 to 5",
             "difficulty": "beginner",
             "topic": "loops",
-            "starter_code": """public class BoucleFor {
+            "starter_code": """public class ForLoop {
     public static void main(String[] args) {
-        // Utilisez une boucle for pour afficher les nombres de 1 à 5
+        // Use a for loop to print numbers from 1 to 5
 
     }
 }""",
-            "solution": """public class BoucleFor {
+            "solution": """public class ForLoop {
     public static void main(String[] args) {
         for (int i = 1; i <= 5; i++) {
-            System.out.println("Nombre: " + i);
+            System.out.println("Number: " + i);
         }
     }
 }""",
             "test_cases": [
-                {"input": "", "expected_output": "Nombre: 1\\nNombre: 2\\nNombre: 3\\nNombre: 4\\nNombre: 5"}
+                {"input": "", "expected_output": "Number: 1\\nNumber: 2\\nNumber: 3\\nNumber: 4\\nNumber: 5"}
             ]
         },
         {
-            "title": "Conditions if/else",
-            "description": "Créez un programme qui vérifie si un nombre est pair ou impair",
+            "title": "If/Else conditions",
+            "description": "Create a program that checks if a number is even or odd",
             "difficulty": "beginner",
             "topic": "conditions",
-            "starter_code": """public class PairImpair {
+            "starter_code": """public class EvenOdd {
     public static void main(String[] args) {
-        int nombre = 7;
+        int number = 7;
 
-        // Utilisez if/else pour vérifier si le nombre est pair ou impair
-        // Affichez "Le nombre X est pair" ou "Le nombre X est impair"
+        // Use if/else to check if the number is even or odd
+        // Print "The number X is even" or "The number X is odd"
 
     }
 }""",
-            "solution": """public class PairImpair {
+            "solution": """public class EvenOdd {
     public static void main(String[] args) {
-        int nombre = 7;
+        int number = 7;
 
-        if (nombre % 2 == 0) {
-            System.out.println("Le nombre " + nombre + " est pair");
+        if (number % 2 == 0) {
+            System.out.println("The number " + number + " is even");
         } else {
-            System.out.println("Le nombre " + nombre + " est impair");
+            System.out.println("The number " + number + " is odd");
         }
     }
 }""",
             "test_cases": [
-                {"input": "", "expected_output": "Le nombre 7 est impair"}
+                {"input": "", "expected_output": "The number 7 is odd"}
             ]
         },
         {
-            "title": "Première classe",
-            "description": "Créez une classe Personne avec des attributs et méthodes de base",
+            "title": "First class",
+            "description": "Create a Person class with basic attributes and methods",
             "difficulty": "intermediate",
             "topic": "oop",
-            "starter_code": """public class Personne {
-    // Déclarez des attributs privés : nom (String) et age (int)
+            "starter_code": """public class Person {
+    // Declare private attributes: name (String) and age (int)
 
-    // Créez un constructeur qui prend nom et age en paramètres
+    // Create a constructor that takes name and age as parameters
 
-    // Créez des méthodes getter pour nom et age
+    // Create getter methods for name and age
 
-    // Créez une méthode sePresenter() qui affiche "Je m'appelle X et j'ai Y ans"
+    // Create a method introduce() that prints "My name is X and I am Y years old"
 
     public static void main(String[] args) {
-        // Créez une instance de Personne et testez vos méthodes
+        // Create an instance of Person and test your methods
 
     }
 }""",
-            "solution": """public class Personne {
-    private String nom;
+            "solution": """public class Person {
+    private String name;
     private int age;
 
-    public Personne(String nom, int age) {
-        this.nom = nom;
+    public Person(String name, int age) {
+        this.name = name;
         this.age = age;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
     public int getAge() {
         return age;
     }
 
-    public void sePresenter() {
-        System.out.println("Je m'appelle " + nom + " et j'ai " + age + " ans");
+    public void introduce() {
+        System.out.println("My name is " + name + " and I am " + age + " years old");
     }
 
     public static void main(String[] args) {
-        Personne p = new Personne("Alice", 25);
-        p.sePresenter();
+        Person p = new Person("Alice", 25);
+        p.introduce();
     }
 }""",
             "test_cases": [
-                {"input": "", "expected_output": "Je m'appelle Alice et j'ai 25 ans"}
+                {"input": "", "expected_output": "My name is Alice and I am 25 years old"}
             ]
         }
     ]
 
-    # Créer les exercices en base
+    # Create exercises in database
     for ex_data in exercises_data:
         exercise = Exercise(**ex_data)
         db.add(exercise)

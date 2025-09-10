@@ -22,9 +22,9 @@ def send_message(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Envoyer un message et recevoir une réponse du bot"""
+    """Send a message and get back a response of bot"""
 
-    # Créer ou récupérer la conversation
+    # Create or retive a conversation
     if chat_request.conversation_id:
         conversation = conversation_service.get_conversation_by_id(
             db, chat_request.conversation_id, current_user.id
@@ -35,29 +35,29 @@ def send_message(
                 detail="Conversation not found"
             )
     else:
-        # Créer une nouvelle conversation
+        # Create a new conversation
         conversation = conversation_service.create_conversation(
             db, current_user.id, "Nouvelle conversation"
         )
 
-    # Ajouter le message de l'utilisateur
+    # Add user message
     user_message = conversation_service.add_message_to_conversation(
         db, conversation.id, chat_request.message, is_bot=False
     )
 
-    # Récupérer l'historique pour l'IA
+    # Retrive historic for l'IA
     conversation_history = conversation_service.get_conversation_history_for_ai(
         db, conversation.id, limit=10
     )
 
-    # Générer la réponse du bot
+    # Generate bot response
     bot_response_content = openai_service.generate_response(
         message=chat_request.message,
         user_level=current_user.java_level,
         conversation_history=conversation_history
     )
 
-    # Ajouter la réponse du bot
+    # Add bot response
     bot_message = conversation_service.add_message_to_conversation(
         db, conversation.id, bot_response_content, is_bot=True
     )
@@ -74,7 +74,7 @@ def get_conversations(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Récupérer toutes les conversations de l'utilisateur"""
+    """Retrive all user conversations with message"""
     conversations = conversation_service.get_user_conversations(db, current_user.id)
     return conversations
 
@@ -85,7 +85,7 @@ def get_conversation(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Récupérer une conversation spécifique avec ses messages"""
+    """Retrive a specific conversation with its message"""
     conversation = conversation_service.get_conversation_by_id(
         db, conversation_id, current_user.id
     )
@@ -105,7 +105,7 @@ def delete_conversation(
         current_user: UserResponse = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Supprimer une conversation"""
+    """Delete conversation"""
     success = conversation_service.delete_conversation(
         db, conversation_id, current_user.id
     )
