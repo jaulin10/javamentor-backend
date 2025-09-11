@@ -16,7 +16,8 @@ app = FastAPI(title="JavaMentor API", version="1.0.0")
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend React
+    allow_origins=["http://localhost:3000",# Frontend React
+                   "https://javamentor-frontend.vercel.app"],  # Frontend vercel
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
